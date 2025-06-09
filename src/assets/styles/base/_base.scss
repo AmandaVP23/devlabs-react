@@ -1,0 +1,23 @@
+@use 'variables' as *;
+
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: $color-bg;
+}
+
+.screen-container {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: $sidebar-width ;
+}

@@ -8,10 +8,7 @@ export const useTokenRefresh = () => {
     
     useEffect(() => {
         const scheduleRefresh = () => {
-            const token = localStorage.getItem('access_token');
-            if (!token) return;
-            
-            const expiry = AuthenticationService.getTokenExpiry(token);
+            const expiry = AuthenticationService.getTokenExpiry();
             const now = Math.floor(Date.now() / 1000);
             const delayMilliseconds = (expiry - now - REFRESH_BUFFER_SECONDS) * 1000;
 
@@ -33,7 +30,7 @@ export const useTokenRefresh = () => {
             if (success) {
                 scheduleRefresh();
             } else {
-                AuthenticationServiceredirectToLogin();
+                AuthenticationService.redirectToLogin();
             }
         };
         

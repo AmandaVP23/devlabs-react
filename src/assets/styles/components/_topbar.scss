@@ -1,0 +1,16 @@
+@use '../base/variables' as *;
+
+.topbar {
+    width: 100%;
+    height: $topbar-height;
+    background-color: $color-bg;
+    padding: 5px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid $color-text;
+
+    .logo-full-dark {
+        height: 38px;
+    }
+}

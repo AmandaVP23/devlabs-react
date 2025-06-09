@@ -1,5 +1,5 @@
 import { useEffect, useState, type FunctionComponent } from 'react';
-import Sidebar from '../components/sidebar';
+import Topbar from '../components/topbar';
 import { Routes } from '../constants/routes';
 import { createProtectedRoute } from '../authentication/protectedRoute';
 import { AuthenticationService } from '../authentication/AuthenticationService';
@@ -25,7 +25,7 @@ const IndexScreen: FunctionComponent<OwnProps> = (props: OwnProps) => {
 
     return (
         <div className="screen-container">
-            <Sidebar />
+            <Topbar />
             <h1>Hello World!</h1>
             <h2>You are authenticated!</h2>
         </div>

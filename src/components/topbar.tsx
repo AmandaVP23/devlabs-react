@@ -6,14 +6,16 @@
 
 import type { FunctionComponent } from 'react';
 import { AuthenticationService } from '../authentication/AuthenticationService';
+import AppLogo from '../assets/images/full-logo-dark.svg';
 
 type OwnProps = {};
 
-const sidebar: FunctionComponent<OwnProps> = (props: OwnProps) => {
+const topbar: FunctionComponent<OwnProps> = (props: OwnProps) => {
     const {} = props;
 
     return (
-        <div className="sidebar">
+        <div className="topbar">
+            <AppLogo />
             <button type="button" onClick={AuthenticationService.logout}>
                 Logout
             </button>
@@ -21,4 +23,4 @@ const sidebar: FunctionComponent<OwnProps> = (props: OwnProps) => {
     );
 };
 
-export default sidebar;
+export default topbar;

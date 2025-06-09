@@ -1,7 +1,6 @@
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
 import { Routes } from '../constants/routes';
 import { useEffect, useRef } from 'react';
-import { exchangeCodeForToken } from '../authentication/tokens';
 import { AuthenticationService } from '../authentication/AuthenticationService';
 
 export const Route = createFileRoute(Routes.AuthCallback)({
@@ -18,17 +17,24 @@ function AuthCallbackScreen() {
     const hasProcessed = useRef(false);
 
     useEffect(() => {
+        prepare();
+    }, [search.code]);
+
+    const prepare = async () => {
         if (hasProcessed.current || !search.code) return;
 
         hasProcessed.current = true;
 
-        exchangeCodeForToken(search.code)
-            .then((tokens) => {
-                AuthenticationService.storeTokens(tokens);
-                router.navigate({ to: '/' });
-            })
-            .catch(console.error);
-    }, [search.code]);
+        const tokensResponse = await AuthenticationService.exchangeCodeForToken(
+            search.code,
+        );
 
+        if (tokensResponse) {
+            AuthenticationService.storeTokens(tokensResponse);
+            router.navigate({ to: '/' });
+        }
+    };
+
+    // todo - show loader here
     return <div>Hello "/callback"!</div>;
 }

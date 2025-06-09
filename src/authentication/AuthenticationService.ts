@@ -1,6 +1,7 @@
 import { OIDC_CONFIG } from './config';
 import axios from 'axios';
 import { PKCEService } from './PKCEService';
+import type { AuthTokens } from '../types/authentication';
 
 export class AuthenticationService {
     public static isAuthenticated() {
@@ -10,7 +11,10 @@ export class AuthenticationService {
         return !AuthenticationService.isTokenExpired(token);
     }
 
-    public static getTokenExpiry(token: string): number {
+    public static getTokenExpiry(): number {
+        const token = localStorage.getItem('access_token');
+        if (!token) return 0;
+
         try {
             const [, payload] = token.split('.');
             const decoded = JSON.parse(atob(payload));
@@ -75,10 +79,10 @@ export class AuthenticationService {
         return false;
     }
 
-    public static storeTokens(tokens: any) {
-        localStorage.setItem('access_token', tokens.access_token);
-        localStorage.setItem('id_token', tokens.id_token);
-        localStorage.setItem('refresh_token', tokens.refresh_token);
+    public static storeTokens(tokens: AuthTokens) {
+        localStorage.setItem('access_token', tokens.accessToken);
+        localStorage.setItem('id_token', tokens.idToken);
+        localStorage.setItem('refresh_token', tokens.refreshToken);
     }
 
     public static async redirectToLogin(): Promise<void> {
@@ -96,24 +100,34 @@ export class AuthenticationService {
         window.location.href = `${OIDC_CONFIG.authority}/protocol/openid-connect/auth?${params}`;
     };
 
-    public static async exchangeCodeForToken(code: string): Promise<any> {
-        const verifier = PKCEService.getVerifier();
+    public static async exchangeCodeForToken(code: string): Promise<AuthTokens | null> {
+        try { 
+            const verifier = PKCEService.getVerifier();
     
-        const body = new URLSearchParams({
-            grant_type: 'authorization_code',
-            client_id: OIDC_CONFIG.clientId,
-            code,
-            redirect_uri: OIDC_CONFIG.redirectUri,
-            code_verifier: verifier,
-        });
-    
-        const response = await axios.post(
-            `${OIDC_CONFIG.authority}/protocol/openid-connect/token`,
-            body,
-            { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
-        );
+            const body = new URLSearchParams({
+                grant_type: 'authorization_code',
+                client_id: OIDC_CONFIG.clientId,
+                code,
+                redirect_uri: OIDC_CONFIG.redirectUri,
+                code_verifier: verifier,
+            });
         
-        return response.data;
+            const { data } = await axios.post(
+                `${OIDC_CONFIG.authority}/protocol/openid-connect/token`,
+                body,
+                { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+            );
+            
+            return {
+                refreshToken: data.refresh_token,
+                accessToken: data.access_token,
+                idToken: data.id_token,
+            };
+        } catch (error) {
+            console.log('Error exchanging code for token');
+            console.error(error);
+            return null;
+        }
     }
 
     public static logout() {
