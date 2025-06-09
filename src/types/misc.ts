@@ -1,0 +1,1 @@
+export type ValuesOf<T> = T extends { [key: string]: infer V } ? V : never;
