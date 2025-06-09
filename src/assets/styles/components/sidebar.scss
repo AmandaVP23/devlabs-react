@@ -1,0 +1,15 @@
+.sidebar {
+    width: 100%;
+    height: $sidebar-height;
+    background-color: red;
+    padding: 5px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e0e0e0;
+
+    // .logo {
+    //     width: 100px;
+    //     height: 100%;
+    // }
+}
