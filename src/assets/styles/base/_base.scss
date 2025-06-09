@@ -1,6 +1,5 @@
 @use 'variables' as *;
 
-
 *,
 *::before,
 *::after {
@@ -19,5 +18,6 @@ body {
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: $sidebar-width ;
+    grid-template-columns: $sidebar-width 1fr;
+    grid-template-rows: $topbar-height 1fr;
 }

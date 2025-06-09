@@ -9,6 +9,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid $color-text;
+    grid-column: 1 / 3;
 
     .logo-full-dark {
         height: 38px;
