@@ -1,6 +1,5 @@
 import { createFileRoute, type ErrorRouteComponent, type FileRoutesByPath, type RouteComponent } from '@tanstack/react-router';
-import { isAuthenticated } from './utils';
-import { redirectToLogin } from './oidc';
+import { AuthenticationService } from './AuthenticationService';
 
 type ProtectedRouteConfig = {
     path: keyof FileRoutesByPath;
@@ -14,8 +13,9 @@ export function createProtectedRoute(config: ProtectedRouteConfig) {
     return createFileRoute(config.path)({
         ...config,
         beforeLoad: () => {
-            if (!isAuthenticated()) {
-                throw redirectToLogin();
+            if (!AuthenticationService.isAuthenticated()) {
+                console.log('not authenticated');
+                throw AuthenticationService.redirectToLogin();
             }
 
             return config.beforeLoad?.();
